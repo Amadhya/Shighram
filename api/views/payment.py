@@ -20,14 +20,20 @@ def payment(request):
 
         return JsonResponse(responese)
 
-    response = JsonResponse({'status': 400, 'message': 'Invlaid request method'}, status=400)
-    return response
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
 
 @csrf_exempt
-def paymentOrder(request, rfid):
+def paymentOrder(request):
     if request.method == 'PATCH':
         body = json.loads(request.body)
-        paymentObj = Payment.objects.get_by_rfid(rfid)
+        print(body, 'body------------------')
+        paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
+        print(paymentObj, 'paymentObj')
 
         if paymentObj is None:
             response = {
@@ -46,11 +52,13 @@ def paymentOrder(request, rfid):
             'payment_capture': 1
         }
 
-        client = razorpay.Client(auth=("rzp_test_aaYo7uFXPntX6s", "Fy7KKIBIxesTdDKYwtT60acJ"))
+        client = razorpay.Client(auth=("#key", "#secret"))
         order_response = client.order.create(data=DATA)
         order_id = order_response.get('id')
 
-        payment.razorpay_order_id = order_id
+        print(order_id, 'order_id....................')
+
+        paymentObj.razorpay_order_id = order_id
         paymentObj.save()
 
         response = {
@@ -61,7 +69,16 @@ def paymentOrder(request, rfid):
             },
         }
 
-        return JsonResponse(response)
+        print(response)
+
+        return JsonResponse(response, status=200)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
 
 @csrf_exempt
 def paymentVerification(request, rfid):
@@ -93,3 +110,10 @@ def paymentVerification(request, rfid):
         # }
 
         # return JsonResponse(response)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)

@@ -29,10 +29,10 @@ def authenticate(request):
     except UnicodeError:
         msg = 'Invalid token header. Token string should not contain invalid characters.'
         raise exceptions.AuthenticationFailed(msg)
+    
+    is_authenticated, email = authenticate_using_token(token)
 
-    is_authenticated = authenticate_using_token(token)
-
-    return is_authenticated
+    return is_authenticated, email
 
 
 def authenticate_using_token(token):
@@ -43,7 +43,7 @@ def authenticate_using_token(token):
     try:
         user = User.objects.get_by_email(email=email)
         if user.password == password:
-            return True
+            return True, email
 
         raise exceptions.AuthenticationFailed(msg)
 

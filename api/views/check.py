@@ -3,9 +3,12 @@ from django.http.response import JsonResponse
 
 @csrf_exempt
 def Check(request):
-    response = {
-        'status': 200,
-        'message': 'Connection established',
-    }
+    if request.method == 'GET':
+        response = {
+            'status': 200,
+            'message': 'Connection established',
+        }
 
-    return JsonResponse(response)
+        print(response, '------------------')
+
+        return JsonResponse(response)

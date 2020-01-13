@@ -25,7 +25,7 @@ SECRET_KEY = 'a&eqf%)_+$*2rds57bn3l8bqzb^#22!@9(pr=y)j0i8a06oan0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -68,9 +68,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://10.0.2.2'
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
+    'http://10.0.2.2'
 ]
 
 ROOT_URLCONF = 'SmartParkingSystem.urls'
@@ -102,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'smartparking',
         'USER': 'postgres',
-        'PASSWORD': 'abc',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5432',
     }

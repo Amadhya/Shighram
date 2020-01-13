@@ -80,8 +80,8 @@ class User(PermissionsMixin, AbstractBaseUser):
     def serialize(self):
         return {
             'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
+            'firstName': self.first_name,
+            'lastName': self.last_name,
             'email': self.email,
             'phone': self.phone,
             'date_joined': self.date_joined,
