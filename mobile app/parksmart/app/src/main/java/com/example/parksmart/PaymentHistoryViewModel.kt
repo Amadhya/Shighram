@@ -2,12 +2,9 @@ package com.example.parksmart
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.parksmart.network.Apifactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class PaymentHistoryViewModel : ViewModel() {

@@ -16,7 +16,6 @@ from api.views.authoriztion import authenticate
 def login(request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        print(body, '-----------------------')
         email = body['email']
 
         if User.objects.get_by_email(email=email) is None:
@@ -84,11 +83,11 @@ def signup(request):
 def user_profile(request):
     if request.method == 'GET':
         isAuth, email = authenticate(request)
-        print(email)
         if isAuth:
             user = User.objects.get_by_email(email)
             response = {
-                'user': user.serialize(),
+                'status': 200,
+                **user.serialize(),
             }
             return JsonResponse(response, status=200)
 
@@ -108,14 +107,15 @@ def user_profile(request):
 
 
 @csrf_exempt
-def edit_user_details(request, user_id):
+def edit_user_details(request):
     if request.method == 'PATCH':
-        if authenticate(request):
+        isAuth, email = authenticate(request)
+        if isAuth:
             response = {}
 
             body = json.loads(request.body)
 
-            user = User.objects.get_by_id(user_id)
+            user = User.objects.get_by_email(email)
 
             if body.get('firstName') is not None:
                 user.first_name = body.pop('firstName')
@@ -145,7 +145,7 @@ def edit_user_details(request, user_id):
                 **response
             }
             
-            return JsonResponse(response)
+            return JsonResponse(response, status=200)
         
         response = {
             'status': 400,
@@ -163,11 +163,12 @@ def edit_user_details(request, user_id):
 
 
 @csrf_exempt
-def change_password(request, user_id):
+def change_password(request):
     if request.method == 'PATCH':
-        if authenticate(request):
+        isAuth, email = authenticate(request)
+        if isAuth:
             body = json.loads(request.body)
-            user = User.objects.get_by_id(user_id)
+            user = User.objects.get_by_email(email)
     
             if check_password(body.pop('current_password'), user.password):
                 user.set_password(body.pop('new_password'))

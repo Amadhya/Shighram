@@ -8,5 +8,5 @@ import retrofit2.http.POST
 //A retrofit Network Interface for the Api
 interface LoginApi{
     @POST("login")
-    fun getLoginDetails(@Body body: Map<String, String>): Deferred<Response<Map<String, String>>>
+    suspend fun getLoginDetails(@Body body: Map<String, String>): Response<Map<String, String>>
 }

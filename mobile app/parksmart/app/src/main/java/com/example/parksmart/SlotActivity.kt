@@ -1,26 +1,32 @@
 package com.example.parksmart
 
-import android.annotation.TargetApi
-import android.app.Activity
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.parksmart.ui.reservation.ReservationFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultWithDataListener
 
 
-public class SlotActivity : AppCompatActivity(), PaymentResultListener {
+class SlotActivity : AppCompatActivity(), PaymentResultWithDataListener {
+
+    private lateinit var viewModel: SlotViewModel
+
+    private lateinit var sharedPreference: SharedPreference
 
     fun backGroundColor() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -34,7 +40,10 @@ public class SlotActivity : AppCompatActivity(), PaymentResultListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_slot)
 
-        Log.i("Razorpay", "Slot Activity----------------")
+        viewModel = ViewModelProviders.of(this).get(SlotViewModel::class.java)
+
+        sharedPreference = SharedPreference(this)
+
         Checkout.preload(applicationContext)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -51,7 +60,6 @@ public class SlotActivity : AppCompatActivity(), PaymentResultListener {
 
         actionBar?.setHomeButtonEnabled(true)
         supportActionBar?.elevation = 0.0F
-//        this.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -75,17 +83,33 @@ public class SlotActivity : AppCompatActivity(), PaymentResultListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPaymentSuccess(razorpayPaymentID: String?) {
-        /**
-         * Add your logic here for a successful payment response
-         */
-        Log.i("Razorpay", "$razorpayPaymentID success payment-------------")
+    override fun onPaymentError(code: Int, description: String?, data: PaymentData?) {
+        Log.i("Razorpay", "$code ---- $description --- $data")
+        Toast.makeText(this, description, Toast.LENGTH_LONG).show()
     }
 
-    override fun onPaymentError(code: Int, response: String?) {
-        /**
-         * Add your logic here for a failed payment response
-         */
-        Log.i("Razorpay", "$response error payment-------------")
+    override fun onPaymentSuccess(
+        razorpayPaymentId: String?,
+        paymentData: PaymentData?
+    ) {
+        val token = sharedPreference.getValueString("token")
+
+        val data = mapOf("razorpay_order_id" to paymentData!!.orderId, "razorpay_payment_id" to paymentData.paymentId, "razorpay_signature" to paymentData.signature)
+
+        if (token != null) {
+            viewModel.fetchPaymentVerification(token, data)
+        }
+        viewModel.paymentVerificationLiveData.observe(this, Observer {
+            if(it["status"]=="200"){
+                Toast.makeText(this, "Payment Successful.", Toast.LENGTH_LONG).show()
+                val intent = Intent(this, SlotActivity::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Payment not Successful. Please try again.", Toast.LENGTH_LONG).show()
+            }
+        })
+        viewModel.errorLiveData.observe(this, Observer {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        })
     }
 }

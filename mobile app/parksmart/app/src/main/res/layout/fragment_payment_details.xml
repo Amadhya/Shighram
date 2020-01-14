@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="viewMdoel"
+            type="com.example.parksmart.PaymentDetailsViewModel" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,7 +36,7 @@
                 android:textColor="@color/colorWhite"
                 android:textAlignment="center"
                 android:textSize="75sp"
-                android:text="@string/title_amount" />
+                android:text="@{String.valueOf(viewMdoel.amount)}" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pay"
@@ -80,12 +86,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="RFID Number: "
+                        android:text="@string/title_rfid_num"
                         android:textColor="@android:color/darker_gray"/>
                     <TextView
+                        android:id="@+id/rfid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10101026"/>
+                        android:text="@{String.valueOf(viewMdoel.rfid_key)}"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -95,12 +102,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Location: "
+                        android:text="@string/title_location"
                         android:textColor="@android:color/darker_gray"/>
                     <TextView
+                        android:id="@+id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Elante"/>
+                        android:text="@{String.valueOf(viewMdoel.location)}"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -110,12 +118,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Slot: "
+                        android:text="@string/title_slot"
                         android:textColor="@android:color/darker_gray"/>
                     <TextView
+                        android:id="@+id/slot"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8"/>
+                        android:text="@{String.valueOf(viewMdoel.slot)}"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -125,12 +134,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Date &amp; Time: "
+                        android:text="@string/title_date"
                         android:textColor="@android:color/darker_gray"/>
                     <TextView
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12th feb 2019 11am"/>
+                        android:text="@{String.valueOf(viewMdoel.date)}"/>
                 </LinearLayout>
 
             </LinearLayout>

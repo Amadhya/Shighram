@@ -41,8 +41,6 @@ class LoginActivity : AppCompatActivity() {
 
         sharedPreference = SharedPreference(this)
 
-        Log.i("Logout", "${sharedPreference.checkKey("token")}")
-
         binding.logInButton.setOnClickListener{ login() }
 
         binding.createAccount.setOnClickListener{ createAccount() }
@@ -58,20 +56,23 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        Log.i("Login", "$email $password")
-
         if(validateLogin(email, password)){
             viewModel.fetchLogin(email, password)
 
             viewModel.userLiveData.observe(this, Observer {
+                Log.i("Login", "$it")
                 if (it["status"] == "200"){
-                    it["user_id"]?.let { it1 -> sharedPreference.save("user_id", it1) }
                     it["token"]?.let { it1 -> sharedPreference.save("token", it1) }
                     val intent = Intent(this, SlotActivity::class.java)
                     startActivity(intent)
                 } else {
-
+                    Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
+                    binding.password.error = it["message"].toString()
                 }
+            })
+            viewModel.errorLiveData.observe(this, Observer {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                binding.password.error = it.toString()
             })
         }
     }
@@ -82,10 +83,12 @@ class LoginActivity : AppCompatActivity() {
     ): Boolean {
         if (email == null || email.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Email is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "Email is required"
             return false
         }
         if (password == null || password.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show()
+            binding.password.error = "Password is required"
             return false
         }
         return true

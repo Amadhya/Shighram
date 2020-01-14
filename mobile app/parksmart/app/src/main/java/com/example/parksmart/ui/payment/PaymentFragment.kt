@@ -6,11 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
-import com.example.parksmart.LoginViewModel
+import com.example.parksmart.Event
 
 import com.example.parksmart.R
 import com.example.parksmart.SharedPreference
@@ -41,21 +42,32 @@ class PaymentFragment : Fragment() {
     }
 
     private fun calculatePayment(rfid: String) {
-        val user_id = sharedPreference.getValueString("user_id")
 
-        Log.i("Payment", "$user_id 1.")
+        val token = sharedPreference.getValueString("token")
 
-        user_id?.let { viewModel.fetchPayment(rfid, it) }
+        if (token != null) {
+            viewModel.fetchPayment(token, rfid)
+        }
 
-        viewModel.paymentLiveData.observe(this, Observer {
-            Log.i("Payment", "$it")
-            if (it["status"] == "200"){
-                Log.i("Payment", "$it")
+        viewModel.rfidLiveData.observe(this, Observer {
+            it.doneEvent { it1 ->
+                if (it1["status"] == "200"){
+                    if(it1["amount"] == "0"){
+                        Toast.makeText(requireContext(), it1["message"], Toast.LENGTH_LONG).show()
+                    }else{
+                        val actions = PaymentFragmentDirections.actionNavigationPaymentToPaymentDetailsFragment(rfid)
+                        NavHostFragment.findNavController(this@PaymentFragment).navigate(actions)
+                    }
+                }else{
+                    Toast.makeText(requireContext(), it1["message"], Toast.LENGTH_LONG).show()
+                }
             }
         })
-//        val actions = PaymentFragmentDirections.actionNavigationPaymentToPaymentDetailsFragment(rfid)
-//
-//        NavHostFragment.findNavController(this).navigate(actions)
+        viewModel.errorLiveData.observe(this, Observer {
+            it.doneEvent { it1 ->
+                Toast.makeText(requireContext(), it1, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 }

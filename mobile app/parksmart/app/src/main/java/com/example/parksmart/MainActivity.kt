@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPreference: SharedPreference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

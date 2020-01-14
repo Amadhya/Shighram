@@ -27,14 +27,6 @@ class SharedPreference(context: Context) {
         editor.apply()
     }
 
-    fun removeValue(KEY_NAME: String) {
-
-        val editor: SharedPreferences.Editor = sharedPref.edit()
-
-        editor.remove(KEY_NAME)
-        editor.apply()
-    }
-
     fun checkKey(KEY_NAME: String): Boolean{
         return sharedPref.contains(KEY_NAME)
     }

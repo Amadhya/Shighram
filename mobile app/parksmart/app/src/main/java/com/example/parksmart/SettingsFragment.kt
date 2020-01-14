@@ -33,19 +33,19 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
-    fun navigateToPersonalInfo() {
+    private fun navigateToPersonalInfo() {
         val actions = SettingsFragmentDirections.actionSettingsFragmentToPersonalInfoFragment()
 
         NavHostFragment.findNavController(this).navigate(actions)
     }
 
-    fun navigateToPaymentHistory() {
+    private fun navigateToPaymentHistory() {
         val actions = SettingsFragmentDirections.actionSettingsFragmentToPaymentHistoryFragment()
 
         NavHostFragment.findNavController(this).navigate(actions)
     }
 
-    fun onLogOut() {
+    private fun onLogOut() {
         sharedPreference.clearSharedPreference()
         val intent = Intent(requireContext(), LoginActivity::class.java)
         startActivity(intent)

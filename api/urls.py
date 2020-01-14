@@ -7,9 +7,10 @@ urlpatterns = [
     path('login', login, name='login'),
     path('signup', signup, name='signup'),
     path('profile', user_profile, name='user profile'),
-    path('edit_profile/<uuid:user_id>', edit_user_details, name='edit user details'),
-    path('change_password/<uuid:user_id>', change_password, name='change password'),
+    path('editProfile', edit_user_details, name='edit user details'),
+    path('change_password', change_password, name='change password'),
+    path('verify_rfid', verify_rfid, name='verify rfid'),
     path('payment', payment, name='payment'),
     path('paymentOrder', paymentOrder, name='payment order'),
-    path('paymentVerification/<str:rfid>', paymentVerification, name='payment verification')
+    path('paymentVerification', paymentVerification, name='payment verification')
 ]

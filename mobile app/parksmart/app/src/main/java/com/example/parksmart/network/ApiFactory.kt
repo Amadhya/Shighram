@@ -17,7 +17,7 @@ object Apifactory{
         HttpLoggingInterceptor.Level.BODY))
         .build()
 
-    fun retrofit() : Retrofit = Retrofit.Builder()
+    private fun retrofit() : Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl("http://10.0.2.2:8000/api/")
         .addConverterFactory(MoshiConverterFactory.create())
@@ -29,7 +29,13 @@ object Apifactory{
 
     val signUpApi: SignUpApi = retrofit().create(SignUpApi::class.java)
 
+    val editUserInfoApi: EditUserInfoApi = retrofit().create(EditUserInfoApi::class.java)
+
+    val verifyRfidApi: VerifyRfidApi = retrofit().create(VerifyRfidApi::class.java)
+
     val paymentOrdersApi: PaymentOrdersApi = retrofit().create(PaymentOrdersApi::class.java)
+
+    val paymentVerificationApi: PaymentVerificationApi = retrofit().create(PaymentVerificationApi::class.java)
 
     val userInfoApi: UserInfoApi = retrofit().create(UserInfoApi::class.java)
 

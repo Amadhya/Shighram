@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Park Smart</string>
+    <string name="app_name">Suvidham</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="submit_button">Submit</string>
@@ -48,4 +48,6 @@
     <string name="title_duration">Duration: </string>
     <string name="title_date">Date: </string>
     <string name="title_amount_paid">Amount Paid: </string>
+    <string name="title_slot">Slot: </string>
+    <string name="title_rfid_num">Rfid Number: </string>
 </resources>

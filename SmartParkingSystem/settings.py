@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'smartparking',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': 'abc',
         'HOST': 'localhost',
         'PORT': '5432',
     }

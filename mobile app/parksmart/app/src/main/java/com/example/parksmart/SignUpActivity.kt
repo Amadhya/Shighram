@@ -3,13 +3,13 @@ package com.example.parksmart
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.parksmart.databinding.ActivityLoginBinding
 import com.example.parksmart.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
@@ -62,12 +62,17 @@ class SignUpActivity : AppCompatActivity() {
             viewModel.fetchSignUp(firstName, lastName, phone, email, password)
 
             viewModel.userLiveData.observe(this, Observer {
+                Log.i("SignUp", "$it")
                 if (it["status"] == "200"){
-                    it["user_id"]?.let { it1 -> sharedPreference.save("user_id", it1) }
                     it["token"]?.let { it1 -> sharedPreference.save("token", it1) }
                 } else {
-
+                    Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
+                    binding.email.error = it["message"].toString()
                 }
+            })
+            viewModel.errorLiveData.observe(this, Observer {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                binding.password.error = it.toString()
             })
         }
     }
@@ -82,22 +87,27 @@ class SignUpActivity : AppCompatActivity() {
 
         if (firstName == null || firstName.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "First Name is required"
             return false
         }
         if (lastName == null || lastName.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "Last Name is required"
             return false
         }
         if (phone == null || phone.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Phone number is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "Phone number is required"
             return false
         }
         if (email == null || email.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Email is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "Email is required"
             return false
         }
         if (password == null || password.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show()
+            binding.email.error = "Password is required"
             return false
         }
         return true

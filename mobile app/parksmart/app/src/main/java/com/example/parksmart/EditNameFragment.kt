@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.parksmart.databinding.FragmentEditNameBinding
-import com.example.parksmart.databinding.FragmentPaymentDetailsBinding
 
 
 class EditNameFragment : Fragment() {
@@ -29,6 +29,9 @@ class EditNameFragment : Fragment() {
 
         sharedPreference = SharedPreference(requireContext())
 
+        binding.firstName.setText(arguments?.get("firstName").toString())
+        binding.lastName.setText(arguments?.get("lastName").toString())
+
         binding.saveButton.setOnClickListener{onSaveChanges(binding.firstName.text.toString(), binding.lastName.text.toString())}
 
         return binding.root
@@ -36,15 +39,15 @@ class EditNameFragment : Fragment() {
 
     private fun onSaveChanges(firstName: String, lastName: String) {
         val data = mapOf("firstName" to firstName, "lastName" to lastName)
-        val user_id = sharedPreference.getValueString("user_id")
-
-        if (user_id != null) {
-            viewModel.fetchEditDetails(data, user_id)
+        val token = sharedPreference.getValueString("token")
+        if (token != null) {
+            viewModel.fetchEditDetails(data, token)
 
             viewModel.editLiveData.observe(this, Observer {
-                if (it["status"] == "200"){
-
-                }
+                Toast.makeText(requireContext(), it["message"], Toast.LENGTH_LONG).show()
+            })
+            viewModel.errorLiveData.observe(this, Observer {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             })
         }
     }

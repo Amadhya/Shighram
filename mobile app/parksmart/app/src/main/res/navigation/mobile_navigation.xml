@@ -45,26 +45,47 @@
         tools:layout="@layout/personal_info_fragment" >
         <action
             android:id="@+id/action_personalInfoFragment_to_editEmailFragment"
-            app:destination="@id/editEmailFragment" />
+            app:destination="@id/editEmailFragment"
+            app:popUpTo="@+id/personalInfoFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_personalInfoFragment_to_editPhoneFragment"
-            app:destination="@id/editPhoneFragment" />
+            app:destination="@id/editPhoneFragment"
+            app:popUpTo="@+id/personalInfoFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_personalInfoFragment_to_editNameFragment"
-            app:destination="@id/editNameFragment" />
+            app:destination="@id/editNameFragment"
+            app:popUpTo="@+id/personalInfoFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/editEmailFragment"
         android:name="com.example.parksmart.EditEmailFragment"
-        tools:layout="@layout/fragment_edit_email"/>
+        tools:layout="@layout/fragment_edit_email">
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/editNameFragment"
         android:name="com.example.parksmart.EditNameFragment"
-        tools:layout="@layout/fragment_edit_name"/>
+        tools:layout="@layout/fragment_edit_name">
+        <argument
+            android:name="firstName"
+            app:argType="string" />
+        <argument
+            android:name="lastName"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/editPhoneFragment"
         android:name="com.example.parksmart.EditPhoneFragment"
-        tools:layout="@layout/fragment_edit_phone"/>
+        tools:layout="@layout/fragment_edit_phone">
+        <argument
+            android:name="phone"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/paymentHistoryFragment"
         android:name="com.example.parksmart.PaymentHistoryFragment"

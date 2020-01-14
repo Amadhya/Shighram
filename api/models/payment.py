@@ -8,6 +8,9 @@ class PaymentManager(models.Manager):
     def get_by_id(self, payment_id):
         return self.filter(id=payment_id).first()
 
+    def get_by_razorpay_order_id(self, razorpay_order_id):
+        return self.filter(razorpay_order_id=razorpay_order_id).first()
+
     def get_by_rfid(self, rfid):
         return self.filter(rfid=rfid).first()
 
@@ -30,7 +33,7 @@ class Payment(models.Model):
 
     def serialize(self):
         return {
-            'id': self.id,
+            'order_id': self.id,
             'rfid': self.rfid,
             'amount': self.amount,
             'slot_number': self.slot_number,
@@ -39,9 +42,9 @@ class Payment(models.Model):
             'razorpay_order_id': self.razorpay_order_id,
             'razorpay_payment_id': self.razorpay_payment_id,
             'razorpay_signature': self.razorpay_signature,
-            'payment_verified': self.verified,
-            'created_on': datetime.timestamp(self.created_on),
-            'updated_on': datetime.timestamp(self.updated_on),
+            'payment_verified': str(self.verified),
+            'created_on': self.created_on,
+            'updated_on': self.updated_on,
         }
 
     @classmethod

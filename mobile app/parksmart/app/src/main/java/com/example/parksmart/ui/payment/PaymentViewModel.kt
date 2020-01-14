@@ -3,54 +3,54 @@ package com.example.parksmart.ui.payment
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.parksmart.Event
 import com.example.parksmart.network.Apifactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 
 class PaymentViewModel : ViewModel() {
-    private val parentJob = Job()
 
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
+    val rfidLiveData = MutableLiveData<Event<Map<String, String>>>()
 
-    private val scope = CoroutineScope(coroutineContext)
+    var errorLiveData = MutableLiveData<Event<String>>()
 
-    val paymentLiveData = MutableLiveData<Map<String, String>>()
+    fun fetchPayment(token: String, rfid: String){
+        val data = mapOf("rfid" to rfid)
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = Apifactory.verifyRfidApi.getVerifyRfid("Bearer $token", data)
 
-    var errorLiveData = MutableLiveData<String>()
-
-    fun fetchPayment(rfid: String, user_id: String){
-        val data = mapOf("user_id" to user_id)
-        Log.i("Payment", "$data 2.")
-        scope.launch {
-            val getPropertiesDeferred = Apifactory.paymentOrdersApi.patchPaymentOrder("http://10.0.2.2:8000/api/paymentOrder/${rfid}", data)
-            Log.i("Payment", "$getPropertiesDeferred 3.")
-            try{
-                val response = getPropertiesDeferred.await()
-                Log.i("Payment", "$response 4.")
-                if(response.isSuccessful){
-                    val body = response.body()
-                    paymentLiveData.postValue(body)
-                } else {
-                    if(response.code() == 400){
-                        throw Exception("Invalid rfid number")
-                    } else{
-                        throw Exception(response.message())
+            withContext(Dispatchers.Main) {
+                try {
+                    when {
+                        response.isSuccessful -> {
+                            val body = response.body()
+                            if(body != null){
+                                rfidLiveData.postValue(Event(body))
+                            }
+                        }
+                        response.code() == 400 -> {
+                            errorLiveData.postValue(Event("Invalid rfid"))
+                        }
+                        else -> {
+                            errorLiveData.postValue(Event(response.message()))
+                        }
+                    }
+                } catch (e: HttpException) {
+                    val msg = e.message
+                    if(msg != null){
+                        errorLiveData.postValue(Event(msg))
+                    }
+                } catch (e: Throwable) {
+                    val msg = e.message
+                    if(msg != null){
+                        errorLiveData.postValue(Event(msg))
                     }
                 }
-            } catch (e: Exception){
-                errorLiveData.postValue(e.message)
             }
         }
     }
 
-
     override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
+        Log.i("wow", "onCLeared*********")
     }
 }

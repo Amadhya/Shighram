@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.parksmart.databinding.FragmentEditPhoneBinding
@@ -28,6 +29,8 @@ class EditPhoneFragment : Fragment() {
 
         sharedPreference = SharedPreference(requireContext())
 
+        binding.phone.setText(arguments?.get("phone").toString())
+
         binding.saveButton.setOnClickListener{onSaveChanges(binding.phone.text.toString())}
 
         return binding.root
@@ -35,15 +38,16 @@ class EditPhoneFragment : Fragment() {
 
     private fun onSaveChanges(phone: String) {
         val data = mapOf("phone" to phone)
-        val user_id = sharedPreference.getValueString("user_id")
+        val token = sharedPreference.getValueString("token")
 
-        if (user_id != null) {
-            viewModel.fetchEditDetails(data, user_id)
+        if (token != null) {
+            viewModel.fetchEditDetails(data, token)
 
             viewModel.editLiveData.observe(this, Observer {
-                if (it["status"] == "200"){
-
-                }
+                Toast.makeText(requireContext(), it["message"], Toast.LENGTH_LONG).show()
+            })
+            viewModel.errorLiveData.observe(this, Observer {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             })
         }
     }
