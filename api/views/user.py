@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import (
 
 from api.models import *
 from api.views.authoriztion import authenticate
+from api.views.otp import TOTPVerification
 
 
 @csrf_exempt
@@ -207,3 +208,53 @@ def change_password(request):
     }
 
     return JsonResponse(response, status=400)
+
+@csrf_exempt
+def otp_generation(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        email = body.pop('email')
+        user = User.objects.get_by_email(email)
+
+        if user is not None:
+            totp = TOTPVerification()
+            kwargs = {
+                'user': user
+            }
+            respone = totp.generate_token(**kwargs)
+
+            response = {
+                'status': 200,
+                **respone
+            }
+
+            return JsonResponse(response, status=200)
+        
+        response = {
+            'status': '400',
+            'message': 'Invalid email',
+        }
+
+        return JsonResponse(response, status=int(response.get('status')))
+
+@csrf_exempt
+def otp_verification(request):
+    if request.method=='PATCH':
+        body = json.loads(request.body)
+        email = body.pop('email')
+        token=body.pop('token')
+        user = User.objects.get_by_email(email)
+
+        if user is not None:
+            totp = TOTPVerification()
+
+            response = totp.verify_token(token,user)
+
+            return JsonResponse(response, status=int(response.get('status')))
+
+        response = {
+            'status': '400',
+            'message': 'Invalid email',
+        }
+
+        return JsonResponse(response, status=int(response.get('status')))

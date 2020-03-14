@@ -9,6 +9,4 @@ def Check(request):
             'message': 'Connection established',
         }
 
-        print(response, '------------------')
-
         return JsonResponse(response)

@@ -15,9 +15,8 @@ def verify_rfid(request):
         if isAuth:
             body = json.loads(request.body)
             paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
-            print(paymentObj, '***********')
+            
             if paymentObj is None:
-                print('------------')
                 response = {
                     'status': 400,
                     'message': 'Invalid rfid number',
@@ -54,6 +53,7 @@ def verify_rfid(request):
             response = {
                     'status': 200,
                     'message': 'rfid number exist',
+                    'user_name': user.first_name+' '+user.last_name,
                     'verified': 'True',
                     **paymentObj.serialize()
                 }
@@ -96,7 +96,7 @@ def paymentOrder(request):
             body = json.loads(request.body)
             paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
             user = User.objects.get_by_email(email)
-            print(paymentObj, '-----------')
+            
             if paymentObj is None:
                 response = {
                     'status': 400,
