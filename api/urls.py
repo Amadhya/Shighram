@@ -12,6 +12,7 @@ urlpatterns = [
     path('verify_otp', otp_verification, name='verify otp'),
     path('change_password', change_password, name='change password'),
     path('password_reset_request', password_reset_request, name='password reset request'),
+    path('reset_password', reset_password, name='password reset'),
     path('verify_rfid', verify_rfid, name='verify rfid'),
     path('payment', payment, name='payment'),
     path('paymentOrder', paymentOrder, name='payment order'),

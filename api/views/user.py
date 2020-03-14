@@ -1,7 +1,7 @@
 import json
 import jwt
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
@@ -259,6 +259,46 @@ def password_reset_request(request):
         }
 
         return JsonResponse(response, status=400)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
+
+@csrf_exempt
+def reset_password(request):
+    if request.method == 'PATCH':
+        body = json.loads(request.body)
+        uidb64 = body.pop('uidb64')
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get_by_id(uid)
+        token = body.pop('token')
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.set_password(body.pop('new_password'))
+            user.save()
+
+            response = {
+                'status': 200,
+                'message': 'Password has been reset.'
+            }
+            return JsonResponse(response, status=200)
+
+        response = {
+            'status': 400,
+            'message': 'The reset password link is no longer valid.',
+        }
+
+        return JsonResponse(response, status=400)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
 
 @csrf_exempt
 def otp_generation(request):
