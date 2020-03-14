@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'corsheaders',
     'django.contrib.staticfiles',
+    'rest_auth',
     'api',
 ]
 
@@ -111,6 +112,15 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'api.User'
+
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'dean19982020@gmail.com'
+SERVER_EMAIL = 'dean19982020@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'dean19982020@gmail.com'
+EMAIL_HOST_PASSWORD = 'Qwerty@20202020'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

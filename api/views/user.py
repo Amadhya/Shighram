@@ -1,5 +1,9 @@
 import json
 import jwt
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from rest_framework import exceptions
@@ -7,7 +11,9 @@ from rest_framework.authentication import get_authorization_header
 from django.contrib.auth.hashers import (
     check_password
 )
-
+from django.core.mail import send_mail
+from django.contrib import messages
+from SmartParkingSystem.settings import DEFAULT_FROM_EMAIL
 from api.models import *
 from api.views.authoriztion import authenticate
 from api.views.otp import TOTPVerification
@@ -210,6 +216,51 @@ def change_password(request):
     return JsonResponse(response, status=400)
 
 @csrf_exempt
+def password_reset_request(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        email = body.pop('email')
+        user = User.objects.get_by_email(email)
+
+        if user is not None:
+            c = {
+                'email': user.email,
+                'domain': request.META['HTTP_HOST'],
+                'site_name': 'Suvidham',
+                'uid': urlsafe_base64_encode(force_bytes(user.id)),
+                'user': user,
+                'token': default_token_generator.make_token(user),
+                'protocol': 'http',
+            }
+
+            subject_template_name='registration/password_reset_subject.txt'
+            # copied from django/contrib/admin/templates/registration/password_reset_subject.txt to templates directory
+            email_template_name='password_reset_email.html'
+
+            # copied from django/contrib/admin/templates/registration/password_reset_email.html to templates directory
+            subject = loader.render_to_string(subject_template_name, c)
+
+            # Email subject *must not* contain newlines
+            subject = ''.join(subject.splitlines())
+            email = loader.render_to_string(email_template_name, c)
+
+            send_mail(subject, email,  DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+
+            response = {
+                'status': '200',
+                'message': 'An email has been sent to ' + user.email +'. Please check its inbox to continue reseting password.'
+            }
+            
+            return JsonResponse(response, status=200)
+        
+        response = {
+            'status': '400',
+            'message': 'No user is associated with this email address',
+        }
+
+        return JsonResponse(response, status=400)
+
+@csrf_exempt
 def otp_generation(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -232,10 +283,17 @@ def otp_generation(request):
         
         response = {
             'status': '400',
-            'message': 'Invalid email',
+            'message': 'No user is associated with this email address',
         }
 
         return JsonResponse(response, status=int(response.get('status')))
+    
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
 
 @csrf_exempt
 def otp_verification(request):
@@ -254,7 +312,14 @@ def otp_verification(request):
 
         response = {
             'status': '400',
-            'message': 'Invalid email',
+            'message': 'No user is associated with this email address',
         }
 
         return JsonResponse(response, status=int(response.get('status')))
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
