@@ -22,6 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'a&eqf%)_+$*2rds57bn3l8bqzb^#22!@9(pr=y)j0i8a06oan0'
 
+#RAZORPAY SECRETS
+RAZORPAY_SECRET_CLIENT = '#RAZORPAY_CLIENT'
+RAZORPAY_SECRET_KEY = '#RAZORPAY_KEY'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -114,12 +118,12 @@ DATABASES = {
 AUTH_USER_MODEL = 'api.User'
 
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'dean19982020@gmail.com'
-SERVER_EMAIL = 'dean19982020@gmail.com'
+DEFAULT_FROM_EMAIL = '#GMAIL_EMAIL'
+SERVER_EMAIL = '#GMAIL_EMAIL'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dean19982020@gmail.com'
-EMAIL_HOST_PASSWORD = 'Qwerty@20202020'
+EMAIL_HOST_USER = '#GMAIL_EMAIL'
+EMAIL_HOST_PASSWORD = 'GMAIL_PASSWORD'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Password validation

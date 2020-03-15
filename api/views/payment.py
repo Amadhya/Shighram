@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
+from SmartParkingSystem.settings import RAZORPAY_SECRET_CLIENT, RAZORPAY_SECRET_KEY
 from api.models import User, Payment
 from api.views import authenticate
 
@@ -43,7 +44,7 @@ def verify_rfid(request):
                 'payment_capture': 1
             }
 
-            client = razorpay.Client(auth=("rzp_test_aaYo7uFXPntX6s", "Fy7KKIBIxesTdDKYwtT60acJ"))
+            client = razorpay.Client(auth=(RAZORPAY_SECRET_CLIENT, RAZORPAY_SECRET_KEY))
             order_response = client.order.create(data=DATA)
             order_id = order_response.get('id')
 
@@ -131,7 +132,7 @@ def paymentVerification(request):
 
             paymentObj.razorpay_signature=body.pop('razorpay_signature') 
 
-            client = razorpay.Client(auth=("rzp_test_aaYo7uFXPntX6s", "Fy7KKIBIxesTdDKYwtT60acJ"))
+            client = razorpay.Client(auth=(RAZORPAY_SECRET_CLIENT, RAZORPAY_SECRET_KEY))
 
             params_dict = {
                 'razorpay_order_id': paymentObj.razorpay_order_id,
