@@ -231,6 +231,7 @@ def password_reset_request(request):
                 'user': user,
                 'token': default_token_generator.make_token(user),
                 'protocol': 'http',
+                'domain': 'https://suvidham.now.sh/reset_password'
             }
 
             subject_template_name='registration/password_reset_subject.txt'
@@ -248,6 +249,7 @@ def password_reset_request(request):
 
             response = {
                 'status': '200',
+                'verified': 'true',
                 'message': 'An email has been sent to ' + user.email +'. Please check its inbox to continue reseting password.'
             }
             
