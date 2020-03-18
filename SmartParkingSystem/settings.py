@@ -27,7 +27,7 @@ RAZORPAY_SECRET_CLIENT = '#RAZORPAY_CLIENT'
 RAZORPAY_SECRET_KEY = '#RAZORPAY_KEY'
 
 #Google
-GOOGLE_CLIENT_ID = '107331342344-qjlqsgtstdi2usifr091t21teqcp7miv.apps.googleusercontent.com'
+GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID_ANDROID'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -121,12 +121,12 @@ DATABASES = {
 AUTH_USER_MODEL = 'api.User'
 
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'dean19982020@gmail.com'
-SERVER_EMAIL = 'dean19982020@gmail.com'
+DEFAULT_FROM_EMAIL = '#GMAIL'
+SERVER_EMAIL = '#GMAIL'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dean19982020@gmail.com'
-EMAIL_HOST_PASSWORD = 'Anushka@19981996'
+EMAIL_HOST_USER = '#GMAIL'
+EMAIL_HOST_PASSWORD = '#GMAIL_PASSWORD'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Password validation
