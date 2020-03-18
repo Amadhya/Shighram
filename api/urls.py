@@ -5,6 +5,7 @@ from api.views import *
 urlpatterns = [
     path('check', Check, name='check'),
     path('login', login, name='login'),
+    path('google_login', google_login, name='google login'),
     path('signup', signup, name='signup'),
     path('profile', user_profile, name='user profile'),
     path('editProfile', edit_user_details, name='edit user details'),

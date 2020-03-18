@@ -60,14 +60,14 @@ class User(PermissionsMixin, AbstractBaseUser):
     id = models.UUIDField(primary_key=True, null=False, default=uuid.uuid1())
     first_name = models.CharField('first name', max_length=50)
     last_name = models.CharField('last name', max_length=50)
-    phone = models.CharField(max_length=20, unique=True, default='')
+    phone = models.CharField(max_length=20, default='')
     email = models.EmailField(unique=True)
     date_joined = models.DateTimeField('date joined', default=now)
     is_active = models.BooleanField('active', default=True)
     is_staff = models.BooleanField('staff status', default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = UserManager()
 
