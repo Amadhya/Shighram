@@ -16,6 +16,7 @@ def verify_rfid(request):
         if isAuth:
             body = json.loads(request.body)
             paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
+            user = User.objects.get_by_email(email)
             
             if paymentObj is None:
                 response = {
@@ -26,6 +27,17 @@ def verify_rfid(request):
 
                 return JsonResponse(response, status=400)
 
+            if paymentObj.razorpay_order_id != '':
+                response = {
+                    'status': 200,
+                    'message': 'rfid number exist',
+                    'user_name': user.first_name+' '+user.last_name,
+                    'verified': 'True',
+                    **paymentObj.serialize()
+                }
+
+                return JsonResponse(response, status = 200)
+
             if paymentObj.amount=="0":
                 responese = {
                     'status': 200,
@@ -35,7 +47,6 @@ def verify_rfid(request):
 
                 return JsonResponse(responese, status=200)
 
-            user = User.objects.get_by_email(email)
             paymentObj.user_id = user.id
 
             DATA = {
@@ -114,6 +125,13 @@ def paymentOrder(request):
 
             return JsonResponse(response, status=200)
 
+        response = {
+            'status': 400,
+            'message': 'Not authorized to access.',
+        }
+
+        return JsonResponse(response, status=400)
+
     response = {
         'status': 400,
         'message': 'Invalid request method',
@@ -156,6 +174,40 @@ def paymentVerification(request):
 
     response = {
         'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
+
+@csrf_exempt
+def payment_history(request):
+    if request.method == 'GET':
+        isAuth, email = authenticate(request)
+        if isAuth:
+            user = User.objects.get_by_email(email=email)
+            history = Payment.objects.get_by_user_id(user_id=user.id)
+            
+            history_arr = []
+
+            for obj in history:
+                history_arr.append(obj.serialize())
+
+            response = {
+                'status': '200',
+                'history': history_arr
+            }
+            
+            return JsonResponse(response, status=200)
+
+        response = {
+            'status': '400',
+            'message': 'Not authorized to access.',
+        }
+
+        return JsonResponse(response, status=400)
+
+    response = {
+        'status': '400',
         'message': 'Invalid request method',
     }
 

@@ -18,5 +18,6 @@ urlpatterns = [
     path('verify_rfid', verify_rfid, name='verify rfid'),
     path('payment', payment, name='payment'),
     path('paymentOrder', paymentOrder, name='payment order'),
-    path('paymentVerification', paymentVerification, name='payment verification')
+    path('paymentVerification', paymentVerification, name='payment verification'),
+    path('payment_history', payment_history, name='payment history'),
 ]

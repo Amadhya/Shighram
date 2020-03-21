@@ -14,6 +14,9 @@ class PaymentManager(models.Manager):
     def get_by_rfid(self, rfid):
         return self.filter(rfid=rfid).first()
 
+    def get_by_user_id(self, user_id):
+        return self.filter(user_id=user_id)
+
 
 class Payment(models.Model):
     id = models.UUIDField(primary_key=True, null=False, default=uuid.uuid4, unique=True)
