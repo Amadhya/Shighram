@@ -159,8 +159,6 @@ def paymentVerification(request):
             }
 
             verified=client.utility.verify_payment_signature(params_dict)
-            
-            paymentObj.amount = "0"
 
             paymentObj.verified=True
             paymentObj.save()
