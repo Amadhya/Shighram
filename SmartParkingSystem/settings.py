@@ -13,10 +13,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import django_heroku 
 import dj_database_url
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -48,12 +52,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.staticfiles',
     'rest_auth',
-    'whitenoise.runserver_nostatic',
     'api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,7 +66,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -114,19 +117,9 @@ WSGI_APPLICATION = 'SmartParkingSystem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-DATABASES = {
-    'default': dj_database_url.config()
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'smartparking',
-#         'USER': 'postgres',
-#         'PASSWORD': 'abc',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -171,9 +164,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media/'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -181,6 +171,7 @@ STATIC_URL = '/static/'
 #location where django collect all static files
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # location where you will store your static files
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'project_name/static')
-]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 django_heroku.settings(locals())
+del DATABASES['default']['OPTIONS']['sslmode']
