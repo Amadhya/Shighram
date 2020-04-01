@@ -12,21 +12,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import django_heroku 
-import dj_database_url
-import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-dotenv_file = os.path.join(BASE_DIR, ".env")
-if os.path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'a&eqf%)_+$*2rds57bn3l8bqzb^#22!@9(pr=y)j0i8a06oan0'
 
 #RAZORPAY SECRETS
 RAZORPAY_SECRET_CLIENT = '#CLIENT'
@@ -36,9 +31,9 @@ RAZORPAY_SECRET_SECRET = '#SECRET'
 GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID_ANDROID'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['https://suvidham.now.sh','10.0.2.2', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -57,7 +52,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,8 +61,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -85,13 +77,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'http://10.0.2.2',
-    'https://suvidham.now.sh'
+    'http://10.0.2.2'
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
-    'http://10.0.2.2',
-    'https://suvidham.now.sh'
+    'http://10.0.2.2'
 ]
 
 ROOT_URLCONF = 'SmartParkingSystem.urls'
@@ -118,8 +108,8 @@ WSGI_APPLICATION = 'SmartParkingSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+import dj_database_url
+DATABASES = { 'default': dj_database_url.config() }
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -164,14 +154,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-#location where django collect all static files
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
-# location where you will store your static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 django_heroku.settings(locals())
-del DATABASES['default']['OPTIONS']['sslmode']
