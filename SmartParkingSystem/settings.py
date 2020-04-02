@@ -21,17 +21,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a&eqf%)_+$*2rds57bn3l8bqzb^#22!@9(pr=y)j0i8a06oan0'
+SECRET_KEY = os.environ.get('SECRET_KEY', '#SECRET_KEY')
 
 #RAZORPAY SECRETS
-RAZORPAY_SECRET_CLIENT = 'rzp_test_BVf9G4sM6IKXNm'
-RAZORPAY_SECRET_SECRET = 'usGath4y4OtnSwCW7XOxGQcv'
+RAZORPAY_SECRET_CLIENT = os.environ.get('RAZORPAY_SECRET_CLIENT', '#RAZORPAY_SECRET_CLIENT')
+RAZORPAY_SECRET_SECRET = os.environ.get('RAZORPAY_SECRET_SECRET', '#RAZORPAY_SECRET_SECRET')
 
 #Google
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '#GOOGLE_CLIENT_ID')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
 
