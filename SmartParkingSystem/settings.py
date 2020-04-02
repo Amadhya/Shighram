@@ -28,7 +28,7 @@ RAZORPAY_SECRET_CLIENT = 'rzp_test_BVf9G4sM6IKXNm'
 RAZORPAY_SECRET_SECRET = 'usGath4y4OtnSwCW7XOxGQcv'
 
 #Google
-GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID_ANDROID'
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '#GOOGLE_CLIENT_ID')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
