@@ -32,16 +32,18 @@ def verify_rfid(request):
                     'status': 200,
                     'message': 'rfid number exist',
                     'user_name': user.first_name+' '+user.last_name,
-                    'verified': 'True',
+                    'phone': user.phone,
+                    'email': user.email,
                     **paymentObj.serialize()
                 }
 
                 return JsonResponse(response, status = 200)
 
-            if paymentObj.amount=="0":
+            if paymentObj.verified=="True":
                 responese = {
                     'status': 200,
-                    'amount': '0',
+                    'amount': '15',
+                    'payment_verified': 'True',
                     'message': 'No due amount remaining.'
                 }
 
@@ -67,6 +69,8 @@ def verify_rfid(request):
                     'message': 'rfid number exist',
                     'user_name': user.first_name+' '+user.last_name,
                     'verified': 'True',
+                    'phone': user.phone,
+                    'email': user.email,
                     **paymentObj.serialize()
                 }
 
@@ -92,45 +96,6 @@ def payment(request):
         }
 
         return JsonResponse(responese, status=200)
-
-    response = {
-        'status': 400,
-        'message': 'Invalid request method',
-    }
-
-    return JsonResponse(response, status=400)
-
-@csrf_exempt
-def paymentOrder(request):
-    if request.method == 'POST':
-        isAuth, email = authenticate(request)
-        if isAuth:
-            body = json.loads(request.body)
-            paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
-            user = User.objects.get_by_email(email)
-            
-            if paymentObj is None:
-                response = {
-                    'status': 400,
-                    'message': 'Invalid rfid number. Please check again'
-                }
-
-                return JsonResponse(response, status=400)
-
-            response = {
-                'status': 200,
-                **paymentObj.serialize(),
-                **user.serialize()
-            }
-
-            return JsonResponse(response, status=200)
-
-        response = {
-            'status': 400,
-            'message': 'Not authorized to access.',
-        }
-
-        return JsonResponse(response, status=400)
 
     response = {
         'status': 400,
