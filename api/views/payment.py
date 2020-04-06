@@ -36,7 +36,11 @@ def verify_rfid(request):
         isAuth, email = authenticate(request)
         if isAuth:
             body = json.loads(request.body)
-            paymentObj = Payment.objects.get_by_verified_and_rfid(body.pop('rfid'))
+            kwargs = {
+                'rfid': body.pop('rfid'),
+                'verfied': False
+            }
+            paymentObj = Payment.objects.get_by_verified_and_rfid(**kwargs)
             
             user = User.objects.get_by_email(email)
             
