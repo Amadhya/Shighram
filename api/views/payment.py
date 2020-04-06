@@ -10,19 +10,40 @@ from api.views import authenticate
 
 
 @csrf_exempt
+def payment(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+
+        payment = Payment.create(**body)
+
+        responese = {
+            'status': 200,
+            'payment': payment.serialize()
+        }
+
+        return JsonResponse(responese, status=200)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
+
+@csrf_exempt
 def verify_rfid(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)
         if isAuth:
             body = json.loads(request.body)
             paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
+            paymentObj = paymentObj.objects.get_by_verified()
             user = User.objects.get_by_email(email)
             
             if paymentObj is None:
                 response = {
                     'status': 400,
                     'message': 'Invalid rfid number',
-                    'verified': 'False'
                 }
 
                 return JsonResponse(response, status=400)
@@ -84,27 +105,6 @@ def verify_rfid(request):
     return JsonResponse(response, status=400)
 
 @csrf_exempt
-def payment(request):
-    if request.method == 'POST':
-        body = json.loads(request.body)
-
-        payment = Payment.create(**body)
-
-        responese = {
-            'status': 200,
-            'payment': payment.serialize()
-        }
-
-        return JsonResponse(responese, status=200)
-
-    response = {
-        'status': 400,
-        'message': 'Invalid request method',
-    }
-
-    return JsonResponse(response, status=400)
-
-@csrf_exempt
 def paymentVerification(request):
     if request.method == 'PATCH':
         if authenticate(request):
@@ -149,7 +149,8 @@ def payment_history(request):
         if isAuth:
             user = User.objects.get_by_email(email=email)
             history = Payment.objects.get_by_user_id(user_id=user.id)
-            
+            history.sort(key=lambda x: x.created_on, reverse=True)
+
             history_arr = []
 
             for obj in history:

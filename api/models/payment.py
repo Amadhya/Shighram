@@ -17,6 +17,9 @@ class PaymentManager(models.Manager):
     def get_by_user_id(self, user_id):
         return self.filter(user_id=user_id)
 
+    def get_by_verified(self):
+        return self.filter(verified=False)
+
 
 class Payment(models.Model):
     id = models.UUIDField(primary_key=True, null=False, default=uuid.uuid4, unique=True)
