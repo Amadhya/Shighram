@@ -36,8 +36,8 @@ def verify_rfid(request):
         isAuth, email = authenticate(request)
         if isAuth:
             body = json.loads(request.body)
-            paymentObj = Payment.objects.get_by_rfid(body.pop('rfid'))
-            paymentObj = paymentObj.objects.get_by_verified()
+            paymentObj = Payment.objects.get_by_verified_and_rfid(body.pop('rfid'))
+            
             user = User.objects.get_by_email(email)
             
             if paymentObj is None:
@@ -149,11 +149,10 @@ def payment_history(request):
         if isAuth:
             user = User.objects.get_by_email(email=email)
             history = Payment.objects.get_by_user_id(user_id=user.id)
-            history.sort(key=lambda x: x.created_on, reverse=True)
 
             history_arr = []
 
-            for obj in history:
+            for obj in reversed(history):
                 history_arr.append(obj.serialize())
 
             response = {

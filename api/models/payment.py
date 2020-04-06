@@ -17,8 +17,8 @@ class PaymentManager(models.Manager):
     def get_by_user_id(self, user_id):
         return self.filter(user_id=user_id)
 
-    def get_by_verified(self):
-        return self.filter(verified=False)
+    def get_by_verified_and_rfid(self,rfid):
+        return self.filter(verified=False).filter(rfid=rfid)
 
 
 class Payment(models.Model):
