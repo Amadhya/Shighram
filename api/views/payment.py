@@ -38,7 +38,7 @@ def verify_rfid(request):
             body = json.loads(request.body)
             kwargs = {
                 'rfid': body.pop('rfid'),
-                'verfied': False
+                'verified': False
             }
             paymentObj = Payment.objects.get_by_verified_and_rfid(**kwargs)
             
