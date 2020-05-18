@@ -4,6 +4,7 @@ Django==3.0.4
 razorpay==1.2.0
 requests==2.20.1
 PyJWT==1.7.1
+django-cors-headers==3.1.0
 django-rest-auth==0.9.5
 djangorestframework==3.11.0
 djangorestframework-jwt==1.11.0

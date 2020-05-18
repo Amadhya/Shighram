@@ -33,7 +33,7 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '#GOOGLE_CLIENT_ID')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1', 'http://suvidham.now.sh', 'https://suvidham.now.sh','suvidham.now.sh']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1', 'http://suvidham.now.sh']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'corsheaders',
     'django.contrib.staticfiles',
     'rest_auth',
     'api',
@@ -54,9 +55,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -64,6 +67,17 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://suvidham.now.sh',
+    'https://suvidham.now.sh'
+]
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://suvidham.now.sh',
+    'https://suvidham.now.sh'
+]
 
 ROOT_URLCONF = 'SmartParkingSystem.urls'
 
@@ -89,8 +103,8 @@ WSGI_APPLICATION = 'SmartParkingSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-import dj_database_url
-DATABASES = { 'default': dj_database_url.config() }
+# import dj_database_url
+# DATABASES = { 'default': dj_database_url.config() }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
