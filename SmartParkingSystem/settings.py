@@ -33,7 +33,7 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '#GOOGLE_CLIENT_ID')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1', 'http://suvidham.now.sh']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1', 'http://suvidham.now.sh', 'https://suvidham.now.sh/login']
 
 
 # Application definition
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
