@@ -1,7 +1,7 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
+from rest_framework.decorators import api_view
 
-@csrf_exempt
+@api_view(['GET'])
 def Check(request):
     if request.method == 'GET':
         response = {

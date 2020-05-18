@@ -4,7 +4,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template import loader
-from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from rest_framework import exceptions
 from rest_framework.authentication import get_authorization_header
@@ -17,8 +16,9 @@ from SmartParkingSystem.settings import DEFAULT_FROM_EMAIL
 from api.models import *
 from api.views.authoriztion import authenticate
 from api.views.otp import TOTPVerification
+from rest_framework.decorators import api_view
 
-
+@api_view(['POST'])
 def login(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -53,7 +53,7 @@ def login(request):
     response = JsonResponse({'status': 400, 'message': 'Invlaid request method'}, status=400)
     return response
 
-@csrf_exempt
+@api_view(['POST'])
 def signup(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -85,7 +85,7 @@ def signup(request):
     return response
 
 
-@csrf_exempt
+@api_view(['GET'])
 def user_profile(request):
     if request.method == 'GET':
         isAuth, email = authenticate(request)
@@ -112,7 +112,7 @@ def user_profile(request):
     return JsonResponse(response, status=400)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def edit_user_details(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)
@@ -168,7 +168,7 @@ def edit_user_details(request):
     return JsonResponse(response, status=400)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def change_password(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)
@@ -214,7 +214,7 @@ def change_password(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def password_reset_request(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -268,7 +268,7 @@ def password_reset_request(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def reset_password(request):
     if request.method == 'PATCH':
         body = json.loads(request.body)
@@ -301,7 +301,7 @@ def reset_password(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def otp_generation(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -336,7 +336,7 @@ def otp_generation(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def otp_verification(request):
     if request.method=='PATCH':
         body = json.loads(request.body)

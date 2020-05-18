@@ -8,14 +8,14 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
+from rest_framework.decorators import api_view
 
 from api.models.user import User
 from SmartParkingSystem.settings import SECRET_KEY, GOOGLE_CLIENT_ID
 
 
-@csrf_exempt
+@api_view(['POST'])
 def google_login(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -92,7 +92,7 @@ def google_login(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['POST'])
 def google_login_access_token(request):
     if request.method == 'POST':
         body = json.loads(request.body)

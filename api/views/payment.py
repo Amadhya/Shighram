@@ -1,15 +1,15 @@
 import json
 import razorpay
 from django.utils.timezone import now
-from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
+from rest_framework.decorators import api_view
 
 from SmartParkingSystem.settings import RAZORPAY_SECRET_SECRET, RAZORPAY_SECRET_CLIENT
 from api.models import User, Payment
 from api.views import authenticate
 
 
-@csrf_exempt
+@api_view(['POST'])
 def payment(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -30,7 +30,7 @@ def payment(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def verify_rfid(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)
@@ -98,7 +98,7 @@ def verify_rfid(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['PATCH'])
 def paymentVerification(request):
     if request.method == 'PATCH':
         if authenticate(request):
@@ -136,7 +136,7 @@ def paymentVerification(request):
 
     return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['GET'])
 def payment_history(request):
     if request.method == 'GET':
         isAuth, email = authenticate(request)
