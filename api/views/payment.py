@@ -64,16 +64,6 @@ def verify_rfid(request):
 
                 return JsonResponse(response, status = 200)
 
-            if paymentObj.verified=="True":
-                responese = {
-                    'status': 200,
-                    'amount': '15',
-                    'payment_verified': 'True',
-                    'message': 'No due amount remaining.'
-                }
-
-                return JsonResponse(responese, status=200)
-
             paymentObj.user_id = user.id
 
             DATA = {

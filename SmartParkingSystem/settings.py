@@ -33,7 +33,7 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '#GOOGLE_CLIENT_ID')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1', 'http://suvidham.now.sh']
 
 
 # Application definition
@@ -110,6 +110,16 @@ WSGI_APPLICATION = 'SmartParkingSystem.wsgi.application'
 
 import dj_database_url
 DATABASES = { 'default': dj_database_url.config() }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'smartparking',
+#         'USER': 'postgres',
+#         'PASSWORD': 'abc',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 AUTH_USER_MODEL = 'api.User'
 

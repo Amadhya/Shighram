@@ -19,7 +19,6 @@ from api.views.authoriztion import authenticate
 from api.views.otp import TOTPVerification
 
 
-@csrf_exempt
 def login(request):
     if request.method == 'POST':
         body = json.loads(request.body)
