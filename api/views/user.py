@@ -126,7 +126,7 @@ def edit_user_details(request):
             if body.get('firstName') is not None:
                 user.first_name = body.pop('firstName')
             
-            if body.get('last') is not None:
+            if body.get('lastName') is not None:
                 user.last_name = body.pop('lastName')
 
             if body.get('phone') is not None:
