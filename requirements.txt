@@ -1,6 +1,6 @@
 django_otp==0.8.1
 django_heroku==0.3.1
-Django==3.0.7
+Django==3.0.12
 razorpay==1.2.0
 requests==2.20.1
 PyJWT==1.7.1
